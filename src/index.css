@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+nav .active{
+    background-color: #E0E0E0;
+}
+
+input{
+    @apply border border-black outline-none p-2 my-2 block rounded-sm
+}
+form button{
+    @apply bg-black text-white py-2 px-4 rounded-full my-2
+}
