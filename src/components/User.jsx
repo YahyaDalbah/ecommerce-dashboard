@@ -5,12 +5,11 @@ import Loading from "../pageSections/Loading.jsx";
 
 function Logout() {
   const { token, setToken, setRefreshToken } = useAuth();
-  const [loading, setLoading] = useState(); //loading is for all components
+  const [loading, setLoading] = useState(false); 
   const [user, setUser] = useState("");
 
   useEffect(() => {
     setLoading(true);
-    // 2 circles appearing in not a bug, it's becuz logout and login are on the same page and has same state
     if (token) axios.defaults.headers.common["token"] = "yahya__" + token;
     axios
       .get("https://ecommerce-api-three-drab.vercel.app/user")
@@ -32,6 +31,7 @@ function Logout() {
             <p>email: {user.email}</p>
             <p>name: {user.userName}</p>
             <p>role: {user.role}</p>
+            <p>is email confirmed: {user.confirmEmail}</p>
           </div>
           <button
             className="black-button"
