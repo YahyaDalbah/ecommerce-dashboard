@@ -8,7 +8,6 @@ export default function AuthProvider({ children }) {
   const [refreshToken, setRefreshToken] = useState(
     localStorage.getItem("refreshToken")
   );
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["token"] = "yahya__" + token;
@@ -49,8 +48,6 @@ export default function AuthProvider({ children }) {
       setToken,
       refreshToken,
       setRefreshToken,
-      loading,
-      setLoading,
     }),
     [token, refreshToken]
   );

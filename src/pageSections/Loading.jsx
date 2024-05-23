@@ -3,16 +3,15 @@ import { Oval } from "react-loader-spinner";
 
 export default function Loading() {
   return (
-    <div className="">
+    <>
       <Oval
         visible={true}
-        height="100"
-        width="100"
+        height="120"
+        width="120"
         color="#4fa94d"
         ariaLabel="oval-loading"
-        wrapperStyle={{}}
         wrapperClass=""
       />
-    </div>
+    </>
   );
 }

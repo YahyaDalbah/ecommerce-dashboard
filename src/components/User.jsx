@@ -5,11 +5,12 @@ import Loading from "../pageSections/Loading.jsx";
 
 function Logout() {
   const { token, setToken, setRefreshToken } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(); //loading is for all components
   const [user, setUser] = useState("");
 
   useEffect(() => {
     setLoading(true);
+    // 2 circles appearing in not a bug, it's becuz logout and login are on the same page and has same state
     if (token) axios.defaults.headers.common["token"] = "yahya__" + token;
     axios
       .get("https://ecommerce-api-three-drab.vercel.app/user")
@@ -21,13 +22,13 @@ function Logout() {
         setLoading(false);
         console.error(err);
       });
-  }, []);
+  }, [token, setLoading]);
   return (
     <div>
       {!loading ? (
         <>
           <div>
-            <h1 className="text-xl text-bold">user data</h1>
+            <h1 className="page-title">the user page with his data</h1>
             <p>email: {user.email}</p>
             <p>name: {user.userName}</p>
             <p>role: {user.role}</p>
@@ -43,25 +44,30 @@ function Logout() {
           </button>
         </>
       ) : (
-        <Loading />
+        <div className="loading-wrapper">
+          <Loading />
+        </div>
       )}
     </div>
   );
 }
 function UserForm({ children, method }) {
   const [err, setErr] = useState("");
+  const [loading, setLoading] = useState();
   const { setToken, setRefreshToken } = useAuth();
 
   async function doMethod(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     try {
+      setLoading(true);
       const res = await axios.post(
         `https://ecommerce-api-three-drab.vercel.app/auth/${method}`,
         Object.fromEntries(formData)
       );
       setToken(res.data.accessToken);
       setRefreshToken(res.data.refreshToken);
+      setLoading(false);
     } catch (err) {
       if (err.response.data.message) {
         if (err.response.data.err.includes("cPassword")) {
@@ -69,18 +75,22 @@ function UserForm({ children, method }) {
         } else {
           setErr(err.response.data.err);
         }
+        setLoading(false);
       }
     }
   }
 
   return (
-    <form className="my-10 mx-5" onSubmit={doMethod}>
-      {children}
-      {err && <p className="text-red-500">{err}</p>}
-      <button className="black-button">
-        {method === "login" ? "Login" : "Signup"}
-      </button>
-    </form>
+    <>
+      <form className="my-10 mx-5" onSubmit={doMethod}>
+        {children}
+        {err && <p className="text-red-500">{err}</p>}
+        <button className="black-button">
+          {method === "login" ? "Login" : "Signup"}
+        </button>
+        {loading && <Loading />}
+      </form>
+    </>
   );
 }
 
@@ -93,6 +103,10 @@ export default function User() {
         <Logout />
       ) : (
         <>
+          <h1 className="page-title">
+            login / signup (each form works dependently)
+          </h1>
+
           <UserForm method={"login"}>
             <input type="text" name="email" id="email" placeholder="email" />
             <input
