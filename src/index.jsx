@@ -13,6 +13,11 @@ import Coupons from "./components/Coupons.jsx";
 import Products from "./components/Products.jsx";
 import Cart from "./components/Cart.jsx";
 import AuthProvider from "./provider/AuthProvider.jsx";
+import RecoverPassword from "./components/RecoverPassword.jsx";
+import PasswordChanged from "./components/PasswordChanged.jsx";
+
+
+export const BASEURL = "https://ecommerce-api-three-drab.vercel.app";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +32,14 @@ const router = createBrowserRouter([
       {
         path: "/user",
         element: <User />,
+      },
+      {
+        path: "/recoverPassword",
+        element: <RecoverPassword />
+      },
+      {
+        path: "/recoverPassword/passwordChanged",
+        element: <PasswordChanged />
       },
       {
         path: "/categories",

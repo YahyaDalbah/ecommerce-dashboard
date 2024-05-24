@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { BASEURL } from "../index.jsx";
 
 const AuthContext = createContext();
 
@@ -23,7 +24,7 @@ export default function AuthProvider({ children }) {
   async function refreshAccessToken() {
     try {
       const response = await axios.post(
-        "https://ecommerce-api-three-drab.vercel.app/auth/refresh",
+        `${BASEURL}/auth/refresh`,
         { refreshToken: localStorage.getItem("refreshToken") }
       );
       setToken(response.data);

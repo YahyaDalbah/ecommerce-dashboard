@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../provider/AuthProvider.jsx";
 import axios from "axios";
 import Loading from "../pageSections/Loading.jsx";
+import { Link } from "react-router-dom";
+import { BASEURL } from "../index.jsx";
+import ErrorMessage from "../UIcomponents/ErrorMessage.jsx";
 
 function Logout() {
   const { token, setToken, setRefreshToken } = useAuth();
@@ -12,7 +15,7 @@ function Logout() {
     setLoading(true);
     if (token) axios.defaults.headers.common["token"] = "yahya__" + token;
     axios
-      .get("https://ecommerce-api-three-drab.vercel.app/user")
+      .get(`${BASEURL}/user`)
       .then((user) => {
         setLoading(false);
         setUser(user.data);
@@ -62,7 +65,7 @@ function UserForm({ children, method }) {
     try {
       setLoading(true);
       const res = await axios.post(
-        `https://ecommerce-api-three-drab.vercel.app/auth/${method}`,
+        `${BASEURL}/auth/${method}`,
         Object.fromEntries(formData)
       );
       setToken(res.data.accessToken);
@@ -82,9 +85,10 @@ function UserForm({ children, method }) {
 
   return (
     <>
-      <form className="my-10 mx-5" onSubmit={doMethod}>
+      <form className="my-10 mr-5" onSubmit={doMethod}>
         {children}
-        {err && <p className="text-red-500">{err}</p>}
+        {err && <ErrorMessage err={err} />}
+        {method === "login" && <Link className="text-blue-400 block" to={"/recoverPassword"}>forgot password?</Link>}
         <button className="black-button">
           {method === "login" ? "Login" : "Signup"}
         </button>
