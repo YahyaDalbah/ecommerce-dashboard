@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../provider/AuthProvider.jsx";
 import axios from "axios";
 import Loading from "../pageSections/Loading.jsx";
 import { Link } from "react-router-dom";
 import { BASEURL } from "../index.jsx";
 import ErrorMessage from "../UIcomponents/ErrorMessage.jsx";
+import { useUserData } from "../provider/UserProvider.jsx";
 
 function Logout() {
-  const { token, setToken, setRefreshToken } = useAuth();
-  const [loading, setLoading] = useState(false); 
-  const [user, setUser] = useState("");
+  const { setToken, setRefreshToken } = useAuth();
+  const { user, loading } = useUserData();
 
-  useEffect(() => {
-    setLoading(true);
-    if (token) axios.defaults.headers.common["token"] = "yahya__" + token;
-    axios
-      .get(`${BASEURL}/user`)
-      .then((user) => {
-        setLoading(false);
-        setUser(user.data);
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.error(err);
-      });
-  }, [token, setLoading]);
   return (
     <div>
       {!loading ? (
@@ -34,7 +20,7 @@ function Logout() {
             <p>email: {user.email}</p>
             <p>name: {user.userName}</p>
             <p>role: {user.role}</p>
-            <p>is email confirmed: {user.confirmEmail ? "yes" :"no"}</p>
+            <p>is email confirmed: {user.confirmEmail ? "yes" : "no"}</p>
           </div>
           <button
             className="black-button"
@@ -88,7 +74,11 @@ function UserForm({ children, method }) {
       <form className="my-10 mr-5" onSubmit={doMethod}>
         {children}
         {err && <ErrorMessage err={err} />}
-        {method === "login" && <Link className="text-blue-400 block" to={"/recoverPassword"}>forgot password?</Link>}
+        {method === "login" && (
+          <Link className="text-blue-400 block" to={"/recoverPassword"}>
+            forgot password?
+          </Link>
+        )}
         <button className="black-button">
           {method === "login" ? "Login" : "Signup"}
         </button>

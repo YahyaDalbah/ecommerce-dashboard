@@ -15,6 +15,7 @@ import Cart from "./components/Cart.jsx";
 import AuthProvider from "./provider/AuthProvider.jsx";
 import RecoverPassword from "./components/RecoverPassword.jsx";
 import PasswordChanged from "./components/PasswordChanged.jsx";
+import UserProvider from "./provider/UserProvider.jsx";
 
 
 export const BASEURL = "https://ecommerce-api-three-drab.vercel.app";
@@ -73,7 +74,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <UserProvider>
+        <RouterProvider router={router} />
+      </UserProvider>
     </AuthProvider>
   </React.StrictMode>
 );
