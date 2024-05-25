@@ -28,13 +28,13 @@ export default function AuthProvider({ children }) {
         { refreshToken: localStorage.getItem("refreshToken") }
       );
       setToken(response.data);
-      console.log(response.data);
     } catch (err) {
       console.error(err);
     }
   }
   useEffect(() => {
     if (refreshToken) {
+      refreshAccessToken();
       const interval = setInterval(() => {
         refreshAccessToken();
       }, 1000 * 60 * 60); //ms * s * m

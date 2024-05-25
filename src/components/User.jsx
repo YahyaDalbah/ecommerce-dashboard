@@ -34,7 +34,7 @@ function Logout() {
             <p>email: {user.email}</p>
             <p>name: {user.userName}</p>
             <p>role: {user.role}</p>
-            <p>is email confirmed: {user.confirmEmail}</p>
+            <p>is email confirmed: {user.confirmEmail ? "yes" :"no"}</p>
           </div>
           <button
             className="black-button"
