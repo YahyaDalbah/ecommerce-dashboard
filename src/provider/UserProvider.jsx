@@ -6,24 +6,32 @@ import { useAuth } from "./AuthProvider.jsx";
 const UserContext = createContext();
 
 export default function UserProvider({ children }) {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState({email: "",userName: "",role: "",confirmEmail: ""});
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   async function getUserData() {
-    setLoading(true)
+    setLoading(true);
     try {
       const user = (await axios.get(`${BASEURL}/user`)).data;
       setUser(user);
     } catch (err) {
       console.error(err);
     }
-    setLoading(false)
+    setLoading(false);
   }
   useEffect(() => {
-    if (token) axios.defaults.headers.common["token"] = "yahya__" + token;
-    getUserData();
+    if (token) {
+      axios.defaults.headers.common["token"] = "yahya__" + token;
+      getUserData();
+    }else{
+      setUser({ email: "", userName: "", role: "", confirmEmail: "" });
+    }
   }, [token]);
-  return <UserContext.Provider value={{user,loading}}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, loading }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export function useUserData() {
