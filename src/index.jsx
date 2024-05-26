@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./pageSections/ErrorPage.jsx";
 import Home from "./components/Home.jsx";
 import User from "./components/User.jsx";
-import Categories from "./components/Categories.jsx";
+import Categories from "./components/categories/Categories.jsx";
 import SubCategories from "./components/SubCategories.jsx";
 import Brands from "./components/Brands.jsx";
 import Coupons from "./components/Coupons.jsx";
@@ -18,7 +18,6 @@ import PasswordChanged from "./components/PasswordChanged.jsx";
 import UserProvider from "./provider/UserProvider.jsx";
 import UserPrivateRoute from "./auth/UserPrivateRoute.jsx";
 import AdminPrivateRoute from "./auth/AdminPrivateRoute.jsx";
-
 
 export const BASEURL = "https://ecommerce-api-three-drab.vercel.app";
 
@@ -38,11 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/recoverPassword",
-        element: <RecoverPassword />
+        element: <RecoverPassword />,
       },
       {
         path: "/recoverPassword/passwordChanged",
-        element: <PasswordChanged />
+        element: <PasswordChanged />,
       },
       {
         path: "/categories",

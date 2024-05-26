@@ -7,13 +7,18 @@ const UserContext = createContext();
 
 export default function UserProvider({ children }) {
   const [user, setUser] = useState({email: "",userName: "",role: "",confirmEmail: ""});
+  const [categories,setCategories] = useState([])
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   async function getUserData() {
     setLoading(true);
     try {
-      const user = (await axios.get(`${BASEURL}/user`)).data;
+      
+      const userPromise = axios.get(`${BASEURL}/user`);
+      const categoryPromise = axios.get(`${BASEURL}/category`);
+      const [user,categories] = (await Promise.all([userPromise,categoryPromise])).map(res => res.data)
       setUser(user);
+      setCategories(categories)
     } catch (err) {
       console.error(err);
     }
@@ -25,10 +30,11 @@ export default function UserProvider({ children }) {
       getUserData();
     }else{
       setUser({ email: "", userName: "", role: "", confirmEmail: "" });
+      setCategories([])
     }
   }, [token]);
   return (
-    <UserContext.Provider value={{ user, loading }}>
+    <UserContext.Provider value={{ user,categories,setCategories, loading }}>
       {children}
     </UserContext.Provider>
   );

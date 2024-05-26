@@ -12,6 +12,15 @@ input{
 .black-button{
     @apply bg-black text-white py-2 px-4 rounded-full my-2
 }
+.red-button{
+    @apply bg-red-500 text-white py-2 px-4 rounded-full my-2
+}
+.blue-button{
+    @apply bg-blue-500 text-white py-2 px-4 rounded-full my-2
+}
+.white-button{
+    @apply bg-white border border-black text-black py-[7px] px-[15px] rounded-full my-2 
+}
 .loading-wrapper{
     @apply w-full h-svh flex justify-center items-center
 }
