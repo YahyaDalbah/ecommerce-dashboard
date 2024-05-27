@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useAuth } from "../provider/AuthProvider.jsx";
+import { useAuth } from "../../provider/AuthProvider.jsx";
 import axios from "axios";
-import Loading from "../pageSections/Loading.jsx";
+import Loading from "../../pageSections/Loading.jsx";
 import { Link } from "react-router-dom";
-import { BASEURL } from "../index.jsx";
-import ErrorMessage from "../UIcomponents/ErrorMessage.jsx";
-import { useUserData } from "../provider/UserProvider.jsx";
+import { BASEURL } from "../../index.jsx";
+import ErrorMessage from "../../UIcomponents/ErrorMessage.jsx";
+import { useUserData } from "../../provider/UserProvider.jsx";
 
 function Logout() {
   const { setToken, setRefreshToken } = useAuth();
@@ -131,7 +131,7 @@ export default function User() {
               placeholder="confirm password"
             />
             <select
-              className="block my-2 border border-black outline-none"
+              className=""
               name="role"
               id="role"
             >

@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BASEURL } from "../index.jsx";
-import Loading from "../pageSections/Loading.jsx";
-import ErrorMessage from "../UIcomponents/ErrorMessage.jsx";
+import { BASEURL } from "../../index.jsx";
+import Loading from "../../pageSections/Loading.jsx";
+import ErrorMessage from "../../UIcomponents/ErrorMessage.jsx";
 import { Navigate, redirect } from "react-router-dom";
 
 export default function RecoverPassword() {
@@ -11,7 +11,7 @@ export default function RecoverPassword() {
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [shouldRedirect, setShouldRedirect] = useState(false)
+  const [shouldRedirect, setShouldRedirect] = useState(false);
   async function sendCode(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -27,7 +27,7 @@ export default function RecoverPassword() {
         Object.fromEntries(formData)
       );
       setIsCodeSent(true);
-      setErr("")
+      setErr("");
     } catch (err) {
       const data = err.response.data.err.split(":")[1];
       setErr(data);
@@ -56,8 +56,8 @@ export default function RecoverPassword() {
         `${BASEURL}/auth/forgetPassword`,
         Object.fromEntries(formData)
       );
-     
-      setShouldRedirect(true)
+
+      setShouldRedirect(true);
     } catch (err) {
       const data = err.response.data.err.split(":")[1];
       setErr(data);
@@ -100,7 +100,9 @@ export default function RecoverPassword() {
             <button className="black-button">
               {isCodeSent ? "change password" : "send code"}
             </button>
-            {shouldRedirect && <Navigate replace={true} to="/recoverPassword/passwordChanged" />}
+            {shouldRedirect && (
+              <Navigate replace={true} to="/recoverPassword/passwordChanged" />
+            )}
           </form>
         </div>
       )}

@@ -10,7 +10,6 @@ export default function Categories() {
   const [err, setErr] = useState("");
   const { categories, setCategories, loading } = useUserData();
   const [componentLoading, setComponentLoading] = useState(false);
-  console.log(categories);
   async function addCategory(e) {
     e.preventDefault();
     const formData = Object.fromEntries(new FormData(e.target));
@@ -28,7 +27,7 @@ export default function Categories() {
     }
     setComponentLoading(false);
   }
-
+  console.log(categories)
   return (
     <>
       {loading || componentLoading ? (

@@ -5,21 +5,23 @@ import { useUserData } from "../../provider/UserProvider";
 import Loading from "../../pageSections/Loading";
 import ErrorMessage from "../../UIcomponents/ErrorMessage";
 
-export default function Category({ name, id }) {
+export default function SubCategory({ name, _id,categoryId,categoryName }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const { user } = useUserData();
-  const [categoryName, setCategoryName] = useState(name);
-  const [displayedCategoryName, setDisplayedCategoryName] = useState(name);
+  const [subCategoryName, setSubCategoryName] = useState(name);
+  const [displayedSubCategoryName, setDisplayedSubCategoryName] = useState(name);
   const formRef = useRef(null);
   async function updateCategory() {
-    const formData = { name: categoryName };
+    const formData = { name: subCategoryName };
     setLoading(true);
     try {
-      const name = (await axios.put(`${BASEURL}/category/${id}`, formData))
-        .data.name;
-      setDisplayedCategoryName(name);
+      const name = (await axios.put(`${BASEURL}/category/${categoryId}/subCategory/${_id}`, formData)).data
+        .name;
+        
+      setDisplayedSubCategoryName(name);
+      
       setErr("");
       setIsUpdating(false);
     } catch (err) {
@@ -28,12 +30,12 @@ export default function Category({ name, id }) {
     }
     setLoading(false);
   }
-
+  
   return (
     <div className="flex gap-x-10">
       <div>
         <p className="">
-          category name:{" "}
+          sub category name:{" "}
           {isUpdating ? (
             <form
               ref={formRef}
@@ -50,13 +52,17 @@ export default function Category({ name, id }) {
                 id="name"
                 placeholder="category name"
                 className=" inline w-fit"
-                onChange={(e) => setCategoryName(e.target.value)}
-                value={categoryName}
+                onChange={(e) => setSubCategoryName(e.target.value)}
+                value={subCategoryName}
               />
             </form>
           ) : (
-            <span className="text-lg font-semibold">{displayedCategoryName}</span>
+            <span className="text-lg font-semibold">{displayedSubCategoryName}</span>
           )}
+          <span className="block">
+            category name:{" "}
+            <span className="text-lg font-semibold">{categoryName}</span>
+          </span>
         </p>
         {err && <ErrorMessage err={err} />}
         {user.role === "admin" && (
