@@ -5,23 +5,28 @@ import { useUserData } from "../../provider/UserProvider";
 import Loading from "../../pageSections/Loading";
 import ErrorMessage from "../../UIcomponents/ErrorMessage";
 
-export default function SubCategory({ name, _id,categoryId,categoryName }) {
+export default function SubCategory({ name, _id, categoryId, categoryName }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
-  const { user } = useUserData();
+  const { user, setSubCategories } = useUserData();
   const [subCategoryName, setSubCategoryName] = useState(name);
-  const [displayedSubCategoryName, setDisplayedSubCategoryName] = useState(name);
+  const [displayedSubCategoryName, setDisplayedSubCategoryName] =
+    useState(name);
   const formRef = useRef(null);
-  async function updateCategory() {
+  async function updateSubCategory() {
     const formData = { name: subCategoryName };
     setLoading(true);
     try {
-      const name = (await axios.put(`${BASEURL}/category/${categoryId}/subCategory/${_id}`, formData)).data
-        .name;
-        
+      const name = (
+        await axios.put(
+          `${BASEURL}/category/${categoryId}/subCategory/${_id}`,
+          formData
+        )
+      ).data.name;
+
       setDisplayedSubCategoryName(name);
-      
+
       setErr("");
       setIsUpdating(false);
     } catch (err) {
@@ -30,7 +35,19 @@ export default function SubCategory({ name, _id,categoryId,categoryName }) {
     }
     setLoading(false);
   }
-  
+  async function deleteSubCategory() {
+    setLoading(true)
+    try {
+      await axios.delete(
+        `${BASEURL}/category/${categoryId}/subCategory/${_id}`
+      );
+      setSubCategories(prev => prev.filter(subCategory => subCategory._id !== _id))
+      alert("sub category deleted");
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false)
+  }
   return (
     <div className="flex gap-x-10">
       <div>
@@ -43,7 +60,7 @@ export default function SubCategory({ name, _id,categoryId,categoryName }) {
               id="updateCategoryForm"
               onSubmit={(e) => {
                 e.preventDefault();
-                updateCategory();
+                updateSubCategory();
               }}
             >
               <input
@@ -57,7 +74,9 @@ export default function SubCategory({ name, _id,categoryId,categoryName }) {
               />
             </form>
           ) : (
-            <span className="text-lg font-semibold">{displayedSubCategoryName}</span>
+            <span className="text-lg font-semibold">
+              {displayedSubCategoryName}
+            </span>
           )}
           <span className="block">
             category name:{" "}
@@ -69,7 +88,7 @@ export default function SubCategory({ name, _id,categoryId,categoryName }) {
           <>
             <button
               onClick={() =>
-                isUpdating ? updateCategory() : setIsUpdating(true)
+                isUpdating ? updateSubCategory() : setIsUpdating(true)
               }
               className="mr-2 white-button"
             >
@@ -80,7 +99,7 @@ export default function SubCategory({ name, _id,categoryId,categoryName }) {
                 if (isUpdating) {
                   setIsUpdating(false);
                 } else {
-                  //delete
+                  deleteSubCategory();
                 }
                 setErr("");
               }}

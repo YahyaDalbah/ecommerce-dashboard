@@ -9,11 +9,10 @@ export default function Nav() {
       <NavCustomLink to={"/user"}>User</NavCustomLink>
       <NavCustomLink to={"/categories"}>Categories</NavCustomLink>
       <NavCustomLink to={"/subCategories"}>SubCategories</NavCustomLink>
-      <NavCustomLink to={"/brands"}>Brands</NavCustomLink>
+      <NavCustomLink to={"/products"}>Products</NavCustomLink>
       {user && user.role === "admin" && (
         <NavCustomLink to={"/coupons"}>Coupons (admin only)</NavCustomLink>
       )}
-      <NavCustomLink to={"/products"}>Products</NavCustomLink>
       {user && user.role === "user" && (
         <NavCustomLink to={"/cart"}>Cart (user only)</NavCustomLink>
       )}

@@ -9,7 +9,7 @@ export default function Category({ name, id }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
-  const { user } = useUserData();
+  const { user, setCategories, setSubCategories } = useUserData();
   const [categoryName, setCategoryName] = useState(name);
   const [displayedCategoryName, setDisplayedCategoryName] = useState(name);
   const formRef = useRef(null);
@@ -28,7 +28,24 @@ export default function Category({ name, id }) {
     }
     setLoading(false);
   }
-
+  async function deleteCategory() {
+    setLoading(true);
+    try {
+      await axios.delete(
+        `${BASEURL}/category/${id}`
+      );
+      setCategories((prev) =>
+        prev.filter((category) => category._id !== id)
+      );
+      setSubCategories((prev) =>
+        prev.filter((subCategory) => subCategory.categoryId !== id)
+      );
+      alert("category deleted");
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  }
   return (
     <div className="flex gap-x-10">
       <div>
@@ -74,7 +91,7 @@ export default function Category({ name, id }) {
                 if (isUpdating) {
                   setIsUpdating(false);
                 } else {
-                  //delete
+                  deleteCategory()
                 }
                 setErr("");
               }}

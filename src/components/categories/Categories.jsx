@@ -10,6 +10,7 @@ export default function Categories() {
   const [err, setErr] = useState("");
   const { categories, setCategories, loading } = useUserData();
   const [componentLoading, setComponentLoading] = useState(false);
+  const { user } = useUserData();
   async function addCategory(e) {
     e.preventDefault();
     const formData = Object.fromEntries(new FormData(e.target));
@@ -27,7 +28,7 @@ export default function Categories() {
     }
     setComponentLoading(false);
   }
-  console.log(categories)
+  console.log(categories);
   return (
     <>
       {loading || componentLoading ? (
@@ -37,20 +38,23 @@ export default function Categories() {
       ) : (
         <div className="mr-2">
           <h1 className="page-title">Categories</h1>
-          <form onSubmit={addCategory}>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="category name"
-            />
-            {err && <ErrorMessage err={err} />}
-            <button className="black-button">Add Category</button>
-          </form>
+          {user && user.role === "admin" && (
+            <form onSubmit={addCategory}>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder="category name"
+              />
+              {err && <ErrorMessage err={err} />}
+              <button className="black-button">Add Category</button>
+            </form>
+          )}
           <div>
             {categories.map((category) => (
               <Category key={category.id} {...category} />
             ))}
+            {categories.length === 0 && <p>no categories</p>}
           </div>
         </div>
       )}

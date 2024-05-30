@@ -9,6 +9,13 @@ nav .active{
 input{
     @apply border border-black outline-none p-2 my-2 block rounded-sm w-full
 }
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
 select{
     @apply block my-2 border border-black outline-none
 }

@@ -8,9 +8,10 @@ import SubCategory from "./SubCategory.jsx";
 
 export default function SubCategories() {
   const [err, setErr] = useState("");
-  const { categories,subCategories,setSubCategories, loading } = useUserData();
-  console.log(subCategories);
+  const { user, categories, subCategories, setSubCategories, loading } =
+    useUserData();
   const [componentLoading, setComponentLoading] = useState(false);
+
   async function addSubCategory(e) {
     e.preventDefault();
 
@@ -22,12 +23,17 @@ export default function SubCategories() {
     }
     setComponentLoading(true);
     try {
-      const subCategory = (
+      let subCategory = (
         await axios.post(
           `${BASEURL}/category/${formData.categoryId}/subCategory`,
           { name: formData.name }
         )
       ).data;
+      const categoryName = categories.find(
+        (category) => category.id === subCategory.categoryId
+      ).name;
+
+      subCategory = { ...subCategory, categoryName };
       setSubCategories((prev) => [...prev, subCategory]);
       setErr("");
     } catch (err) {
@@ -49,28 +55,31 @@ export default function SubCategories() {
       ) : (
         <div className="mr-2">
           <h1 className="page-title">SubCategories</h1>
-          <form onSubmit={addSubCategory}>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="category name"
-            />
-            <select name="categoryId" id="categoryId">
-              <option value="">select category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            {err && <ErrorMessage err={err} />}
-            <button className="black-button">Add SubCategory</button>
-          </form>
+          {user && user.role === "admin" && (
+            <form onSubmit={addSubCategory}>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder="sub category name"
+              />
+              <select name="categoryId" id="categoryId">
+                <option value="">select category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              {err && <ErrorMessage err={err} />}
+              <button className="black-button">Add SubCategory</button>
+            </form>
+          )}
           <div>
             {subCategories.map((subCategory) => (
               <SubCategory key={subCategory._id} {...subCategory} />
             ))}
+            {subCategories.length === 0 && <p>no sub categories</p>}
           </div>
         </div>
       )}

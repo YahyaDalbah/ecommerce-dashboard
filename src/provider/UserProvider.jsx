@@ -14,24 +14,50 @@ export default function UserProvider({ children }) {
   });
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const { token } = useAuth();
   async function getUserData() {
     setLoading(true);
     try {
-      const userPromise = axios.get(`${BASEURL}/user`);
+      const user = await axios.get(`${BASEURL}/user`);
+      setUser(user.data);
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  }
+  async function getData() {
+    setLoading(true);
+    try {
       const categoryPromise = axios.get(`${BASEURL}/category`);
-      
-      const [user, categories] = (
-        await Promise.all([userPromise, categoryPromise])
+      const productPromise = axios.get(`${BASEURL}/product`);
+      const [categories, products] = (
+        await Promise.all([categoryPromise, productPromise])
       ).map((res) => res.data);
-      setUser(user);
+      const subCategories = categories.reduce(
+        (acc, category) =>
+          acc.concat(
+            category.subCategories.map((subCategory) => ({
+              ...subCategory,
+              categoryName: category.name,
+            }))
+          ),
+        []
+      );
       setCategories(categories);
-      setSubCategories(
-        categories.reduce(
-          (acc, category) => acc.concat(category.subCategories.map(subCategory => ({...subCategory,categoryName: category.name}))),
-          []
-        )
+      setSubCategories(subCategories);
+      console.log(products)
+      setProducts(
+        products.map((product) => {
+          const categoryName = categories.find(
+            (category) => category._id === product.categoryId
+          ).name;
+          const subCategoryName = subCategories.find(
+            (subCategory) => subCategory._id === product.subCategoryId
+          ).name;
+          return { ...product, categoryName,subCategoryName };
+        })
       );
     } catch (err) {
       console.error(err);
@@ -44,10 +70,13 @@ export default function UserProvider({ children }) {
       getUserData();
     } else {
       setUser({ email: "", userName: "", role: "", confirmEmail: "" });
-      setCategories([]);
-      setSubCategories([])
     }
   }, [token]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+  console.log(products);
   return (
     <UserContext.Provider
       value={{
@@ -57,6 +86,8 @@ export default function UserProvider({ children }) {
         loading,
         subCategories,
         setSubCategories,
+        products,
+        setProducts,
       }}
     >
       {children}

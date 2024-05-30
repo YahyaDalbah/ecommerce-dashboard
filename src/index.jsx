@@ -8,9 +8,8 @@ import Home from "./components/Home.jsx";
 import User from "./components/user/User.jsx";
 import Categories from "./components/categories/Categories.jsx";
 import SubCategories from "./components/subCategories/SubCategories.jsx";
-import Brands from "./components/Brands.jsx";
 import Coupons from "./components/Coupons.jsx";
-import Products from "./components/Products.jsx";
+import Products from "./components/products/Products.jsx";
 import Cart from "./components/Cart.jsx";
 import AuthProvider from "./provider/AuthProvider.jsx";
 import RecoverPassword from "./components/user/RecoverPassword.jsx";
@@ -50,10 +49,6 @@ const router = createBrowserRouter([
       {
         path: "/subCategories",
         element: <SubCategories />,
-      },
-      {
-        path: "/brands",
-        element: <Brands />,
       },
       {
         path: "/coupons",
