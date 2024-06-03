@@ -13,7 +13,10 @@ export default function Product({
   description,
   price,
   stock,
-  subCategoryName
+  subCategoryName,
+  mainImage,
+  subImages,
+  setProducts
 }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -60,6 +63,27 @@ export default function Product({
   // }
   return (
     <div className="flex gap-x-10">
+      <div>
+        {mainImage && (
+          <img
+            width={"200px"}
+            height={"100px"}
+            src={mainImage.secure_url}
+            alt="mainImage"
+          />
+        )}
+        <div className="flex"> 
+          {subImages &&
+            subImages.map((subImage) => (
+              <img
+                width={50}
+                key={subImage.public_id}
+                src={subImage.secure_url}
+                alt="subImage"
+              />
+            ))}
+        </div>
+      </div>
       <div>
         <p className="">
           product name:{" "}

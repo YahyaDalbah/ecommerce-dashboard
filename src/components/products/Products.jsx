@@ -36,8 +36,7 @@ export default function Products() {
   }, [getProducts]);
   async function addProduct(e) {
     e.preventDefault();
-
-    const formData = Object.fromEntries(new FormData(e.target));
+    const formData = new FormData(e.target);
     if (formData.categoryId === "") {
       setErr("provide category");
       setComponentLoading(false);
@@ -51,16 +50,23 @@ export default function Products() {
     setComponentLoading(true);
 
     try {
-      let product = (await axios.post(`${BASEURL}/product`, formData)).data;
+      let product = (
+        await axios.post(`${BASEURL}/product`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      ).data;
 
       setProducts((prev) => [...prev, product]);
       setErr("");
     } catch (err) {
-      if (err.response.data.err.includes("duplicate key")) {
-        setErr("sub category exists");
+      if (err.response.data.err.code) {
+        setErr(err.response.data.err.code);
       } else {
         setErr(err.response.data.err);
       }
+      console.error(err);
     }
     setComponentLoading(false);
   }
@@ -103,7 +109,7 @@ export default function Products() {
               <select name="categoryId" id="categoryId">
                 <option value="">select category</option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category._id}>
+                  <option key={category._id} value={category._id}>
                     {category.name}
                   </option>
                 ))}
@@ -111,18 +117,24 @@ export default function Products() {
               <select name="subCategoryId" id="subCategoryId">
                 <option value="">select sub category</option>
                 {subCategories.map((subCategory) => (
-                  <option key={subCategory.id} value={subCategory._id}>
+                  <option key={subCategory._id} value={subCategory._id}>
                     {subCategory.name}
                   </option>
                 ))}
               </select>
               {err && <ErrorMessage err={err} />}
+              <label htmlFor="mainImage">main image</label>
+              <input type="file" name="mainImage" id="mainImage" />
+              <label htmlFor="subImages">
+                sub images, you can choose up to 5 files
+              </label>
+              <input type="file" multiple name="subImages" id="subImages" />
               <button className="black-button">Add product</button>
             </form>
           )}
           <div>
             {products.map((product) => (
-              <Product key={product._id} {...product} />
+              <Product key={product._id} products={products} setProducts={setProducts} {...product} />
             ))}
             {products.length === 0 && <p>no products</p>}
           </div>
