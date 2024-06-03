@@ -13,6 +13,7 @@ export default function Product({
   description,
   price,
   stock,
+  subCategoryName
 }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -143,6 +144,10 @@ export default function Product({
         <span className="block">
           category name:{" "}
           <span className="text-lg font-semibold">{categoryName}</span>
+        </span>
+        <span className="block">
+          subcategory name:{" "}
+          <span className="text-lg font-semibold">{subCategoryName}</span>
         </span>
         {err && <ErrorMessage err={err} />}
         {user.role === "admin" && (

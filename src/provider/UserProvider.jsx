@@ -14,7 +14,6 @@ export default function UserProvider({ children }) {
   });
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const { token } = useAuth();
   async function getUserData() {
@@ -31,9 +30,8 @@ export default function UserProvider({ children }) {
     setLoading(true);
     try {
       const categoryPromise = axios.get(`${BASEURL}/category`);
-      const productPromise = axios.get(`${BASEURL}/product`);
-      const [categories, products] = (
-        await Promise.all([categoryPromise, productPromise])
+      const [categories] = (
+        await Promise.all([categoryPromise])
       ).map((res) => res.data);
       const subCategories = categories.reduce(
         (acc, category) =>
@@ -47,18 +45,6 @@ export default function UserProvider({ children }) {
       );
       setCategories(categories);
       setSubCategories(subCategories);
-      console.log(products)
-      setProducts(
-        products.map((product) => {
-          const categoryName = categories.find(
-            (category) => category._id === product.categoryId
-          ).name;
-          const subCategoryName = subCategories.find(
-            (subCategory) => subCategory._id === product.subCategoryId
-          ).name;
-          return { ...product, categoryName,subCategoryName };
-        })
-      );
     } catch (err) {
       console.error(err);
     }
@@ -76,7 +62,6 @@ export default function UserProvider({ children }) {
   useEffect(() => {
     getData();
   }, []);
-  console.log(products);
   return (
     <UserContext.Provider
       value={{
@@ -86,8 +71,6 @@ export default function UserProvider({ children }) {
         loading,
         subCategories,
         setSubCategories,
-        products,
-        setProducts,
       }}
     >
       {children}

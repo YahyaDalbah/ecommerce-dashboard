@@ -17,9 +17,21 @@ export default function Category({ name, id }) {
     const formData = { name: categoryName };
     setLoading(true);
     try {
-      const name = (await axios.put(`${BASEURL}/category/${id}`, formData))
-        .data.name;
+      const name = (await axios.put(`${BASEURL}/category/${id}`, formData)).data
+        .name;
       setDisplayedCategoryName(name);
+      setSubCategories((prev) =>
+        prev.map((subCategory) =>
+          subCategory.categoryId === id ? { ...subCategory, categoryName:name } : subCategory
+        )
+      );
+      setCategories((prev) =>
+        prev.map((category) =>
+          category._id === id
+            ? { ...category, name }
+            : category
+        )
+      );
       setErr("");
       setIsUpdating(false);
     } catch (err) {
@@ -31,12 +43,8 @@ export default function Category({ name, id }) {
   async function deleteCategory() {
     setLoading(true);
     try {
-      await axios.delete(
-        `${BASEURL}/category/${id}`
-      );
-      setCategories((prev) =>
-        prev.filter((category) => category._id !== id)
-      );
+      await axios.delete(`${BASEURL}/category/${id}`);
+      setCategories((prev) => prev.filter((category) => category._id !== id));
       setSubCategories((prev) =>
         prev.filter((subCategory) => subCategory.categoryId !== id)
       );
@@ -72,7 +80,9 @@ export default function Category({ name, id }) {
               />
             </form>
           ) : (
-            <span className="text-lg font-semibold">{displayedCategoryName}</span>
+            <span className="text-lg font-semibold">
+              {displayedCategoryName}
+            </span>
           )}
         </p>
         {err && <ErrorMessage err={err} />}
@@ -91,7 +101,7 @@ export default function Category({ name, id }) {
                 if (isUpdating) {
                   setIsUpdating(false);
                 } else {
-                  deleteCategory()
+                  deleteCategory();
                 }
                 setErr("");
               }}

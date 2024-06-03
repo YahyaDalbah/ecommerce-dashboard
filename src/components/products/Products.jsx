@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BASEURL } from "../../index.jsx";
 import Loading from "../../pageSections/Loading.jsx";
 import ErrorMessage from "../../UIcomponents/ErrorMessage.jsx";
@@ -8,10 +8,32 @@ import Product from "./Product.jsx";
 
 export default function Products() {
   const [err, setErr] = useState("");
-  const { user, categories, subCategories, products, setProducts, loading } =
-    useUserData();
+  const { user, categories, subCategories, loading } = useUserData();
+  const [products, setProducts] = useState([]);
   const [componentLoading, setComponentLoading] = useState(false);
-
+  const getProducts = useCallback(async () => {
+    setComponentLoading(true);
+    try {
+      const products = (await axios.get(`${BASEURL}/product`)).data;
+      setProducts(
+        products.map((product) => {
+          const categoryName = categories.find(
+            (category) => category._id === product.categoryId
+          ).name;
+          const subCategoryName = subCategories.find(
+            (subCategory) => subCategory._id === product.subCategoryId
+          ).name;
+          return { ...product, categoryName, subCategoryName };
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
+    setComponentLoading(false);
+  }, [categories, subCategories]);
+  useEffect(() => {
+    getProducts();
+  }, [getProducts]);
   async function addProduct(e) {
     e.preventDefault();
 
@@ -31,14 +53,7 @@ export default function Products() {
     try {
       let product = (await axios.post(`${BASEURL}/product`, formData)).data;
 
-      setProducts((prev) => [
-        ...prev,
-        {
-          ...product._doc,
-          categoryName: product.categoryName,
-          subCategoryName: product.subCategoryName,
-        },
-      ]);
+      setProducts((prev) => [...prev, product]);
       setErr("");
     } catch (err) {
       if (err.response.data.err.includes("duplicate key")) {

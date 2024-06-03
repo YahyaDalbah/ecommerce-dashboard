@@ -26,6 +26,11 @@ export default function SubCategory({ name, _id, categoryId, categoryName }) {
       ).data.name;
 
       setDisplayedSubCategoryName(name);
+      setSubCategories((prev) =>
+        prev.map((subCategory) =>
+          subCategory._id === _id ? { ...subCategory, name } : subCategory
+        )
+      );
 
       setErr("");
       setIsUpdating(false);
@@ -36,17 +41,19 @@ export default function SubCategory({ name, _id, categoryId, categoryName }) {
     setLoading(false);
   }
   async function deleteSubCategory() {
-    setLoading(true)
+    setLoading(true);
     try {
       await axios.delete(
         `${BASEURL}/category/${categoryId}/subCategory/${_id}`
       );
-      setSubCategories(prev => prev.filter(subCategory => subCategory._id !== _id))
+      setSubCategories((prev) =>
+        prev.filter((subCategory) => subCategory._id !== _id)
+      );
       alert("sub category deleted");
     } catch (err) {
       console.error(err);
     }
-    setLoading(false)
+    setLoading(false);
   }
   return (
     <div className="flex gap-x-10">
