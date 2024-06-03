@@ -16,51 +16,59 @@ export default function Product({
   subCategoryName,
   mainImage,
   subImages,
-  setProducts
+  setProducts,
 }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
-  const { user, setSubCategories } = useUserData();
-  const [product, setProduct] = useState({ name, description, price, stock });
-  const [displayedProduct, setDisplayedProduct] = useState({
+  const { user } = useUserData();
+  const [inputProduct, setInputProduct] = useState({
     name,
     description,
     price,
     stock,
   });
-  // async function updateProduct() {
-  //   const formData = { name: productName };
-  //   setLoading(true);
-  //   try {
-  //     const {name} = (
-  //       await axios.put(
-  //         `${BASEURL}/category/${categoryId}/product/${_id}`,
-  //         formData
-  //       )
-  //     ).data;
 
-  //     // setDisplayedProductName(name);
+  async function updateProduct() {
+    const formData = {
+      name: inputProduct.name,
+      description: inputProduct.description,
+      price: inputProduct.price,
+      stock: inputProduct.stock,
+    };
+    setLoading(true);
+    try {
+      const { name, description, price, stock } = (
+        await axios.put(`${BASEURL}/product/${_id}`, formData)
+      ).data;
+      console.log(name,description,price,stock)
+      setProducts((prev) =>
+        prev.map((product) =>
+          product._id === _id
+            ? { ...product, name, description, price, stock }
+            : product
+        )
+      );
 
-  //     setErr("");
-  //     setIsUpdating(false);
-  //   } catch (err) {
-  //     console.error(err);
-  //     setErr(err.response.data.err);
-  //   }
-  //   setLoading(false);
-  // }
-  // async function deleteProduct() {
-  //   setLoading(true);
-  //   try {
-  //     await axios.delete(`${BASEURL}/category/${categoryId}/product/${_id}`);
-  //     setSubCategories((prev) => prev.filter((product) => product._id !== _id));
-  //     alert("product deleted");
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  //   setLoading(false);
-  // }
+      setErr("");
+      setIsUpdating(false);
+    } catch (err) {
+      console.error(err);
+      setErr(err.response.data.err);
+    }
+    setLoading(false);
+  }
+  async function deleteProduct() {
+    setLoading(true);
+    try {
+      await axios.delete(`${BASEURL}/product/${_id}`);
+      setProducts((prev) => prev.filter((product) => product._id !== _id));
+      alert("product deleted");
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  }
   return (
     <div className="flex gap-x-10">
       <div>
@@ -72,7 +80,7 @@ export default function Product({
             alt="mainImage"
           />
         )}
-        <div className="flex"> 
+        <div className="flex">
           {subImages &&
             subImages.map((subImage) => (
               <img
@@ -95,14 +103,12 @@ export default function Product({
               placeholder="product name"
               className=" inline w-fit"
               onChange={(e) =>
-                setProduct((prev) => ({ ...prev, name: e.target.value }))
+                setInputProduct((prev) => ({ ...prev, name: e.target.value }))
               }
-              value={product.name}
+              value={inputProduct.name}
             />
           ) : (
-            <span className="text-lg font-semibold">
-              {displayedProduct.name}
-            </span>
+            <span className="text-lg font-semibold">{name}</span>
           )}
         </p>
         <p className="">
@@ -115,14 +121,15 @@ export default function Product({
               placeholder="product description"
               className=" inline w-fit"
               onChange={(e) =>
-                setProduct((prev) => ({ ...prev, description: e.target.value }))
+                setInputProduct((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
               }
-              value={product.description}
+              value={inputProduct.description}
             />
           ) : (
-            <span className="text-lg font-semibold">
-              {displayedProduct.description}
-            </span>
+            <span className="text-lg font-semibold">{description}</span>
           )}
         </p>
         <p className="">
@@ -135,14 +142,12 @@ export default function Product({
               placeholder="product price"
               className=" inline w-fit"
               onChange={(e) =>
-                setProduct((prev) => ({ ...prev, price: e.target.value }))
+                setInputProduct((prev) => ({ ...prev, price: e.target.value }))
               }
-              value={product.price}
+              value={inputProduct.price}
             />
           ) : (
-            <span className="text-lg font-semibold">
-              {displayedProduct.price}
-            </span>
+            <span className="text-lg font-semibold">{price}</span>
           )}
         </p>
         <p className="">
@@ -155,14 +160,12 @@ export default function Product({
               placeholder="product stock"
               className=" inline w-fit"
               onChange={(e) =>
-                setProduct((prev) => ({ ...prev, stock: e.target.value }))
+                setInputProduct((prev) => ({ ...prev, stock: e.target.value }))
               }
-              value={product.stock}
+              value={inputProduct.stock}
             />
           ) : (
-            <span className="text-lg font-semibold">
-              {displayedProduct.stock}
-            </span>
+            <span className="text-lg font-semibold">{stock}</span>
           )}
         </p>
         <span className="block">
@@ -178,7 +181,7 @@ export default function Product({
           <>
             <button
               onClick={() =>
-                isUpdating ? "updateProduct()" : setIsUpdating(true)
+                isUpdating ? updateProduct() : setIsUpdating(true)
               }
               className="mr-2 white-button"
             >
@@ -189,7 +192,7 @@ export default function Product({
                 if (isUpdating) {
                   setIsUpdating(false);
                 } else {
-                  // deleteProduct();
+                  deleteProduct();
                 }
                 setErr("");
               }}
