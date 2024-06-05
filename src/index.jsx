@@ -10,7 +10,7 @@ import Categories from "./components/categories/Categories.jsx";
 import SubCategories from "./components/subCategories/SubCategories.jsx";
 import Coupons from "./components/Coupons.jsx";
 import Products from "./components/products/Products.jsx";
-import Cart from "./components/Cart.jsx";
+import Cart from "./components/Cart/Cart.jsx";
 import AuthProvider from "./provider/AuthProvider.jsx";
 import RecoverPassword from "./components/user/RecoverPassword.jsx";
 import PasswordChanged from "./components/user/PasswordChanged.jsx";
