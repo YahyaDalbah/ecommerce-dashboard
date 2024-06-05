@@ -36,18 +36,20 @@ export default function Cart() {
         <div>
           <h1 className="page-title">Cart</h1>
           {cartProducts.length > 0 ? (
-            <div className="grid grid-cols-2">
-              {cartProducts.map((cartProduct) => {
-                return (
-                  <CartProduct
-                    key={cartProduct._id}
-                    setCartProducts={setCartProducts}
-                    {...cartProduct}
-                  />
-                );
-              })}
+            <>
+              <div className="grid grid-cols-2">
+                {cartProducts.map((cartProduct) => {
+                  return (
+                    <CartProduct
+                      key={cartProduct._id}
+                      setCartProducts={setCartProducts}
+                      {...cartProduct}
+                    />
+                  );
+                })}
+              </div>
               <p className="text-xl">total sum = {totalSum}</p>
-            </div>
+            </>
           ) : (
             <p>no products</p>
           )}
