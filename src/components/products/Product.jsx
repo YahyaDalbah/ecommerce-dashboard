@@ -28,7 +28,7 @@ export default function Product({
     price,
     stock,
   });
-
+  const [qty,setQty] = useState(1);
   async function updateProduct() {
     const formData = {
       name: inputProduct.name,
@@ -41,7 +41,7 @@ export default function Product({
       const { name, description, price, stock } = (
         await axios.put(`${BASEURL}/product/${_id}`, formData)
       ).data;
-      console.log(name,description,price,stock)
+      console.log(name, description, price, stock);
       setProducts((prev) =>
         prev.map((product) =>
           product._id === _id
@@ -68,6 +68,21 @@ export default function Product({
       console.error(err);
     }
     setLoading(false);
+  }
+  async function addProductToCart(){
+    setLoading(true)
+    try{
+      const cart = await axios.post(`${BASEURL}/cart`, { productId: _id, qty });
+      setProducts((prev) =>
+        prev.map((product) =>
+          product._id === _id ? { ...product, stock: product.stock - qty } : product
+        )
+      );
+      console.log(cart.data);
+    }catch(err){
+      console.error(err)
+    }
+    setLoading(false)
   }
   return (
     <div className="flex gap-x-10">
@@ -202,6 +217,19 @@ export default function Product({
             </button>
           </>
         )}
+        {user.role === "user" && stock > 0 && (
+          <>
+            <div className="flex gap-x-2 items-center">
+              <button className="white-button" onClick={() => qty < stock && setQty(qty + 1)}>+</button>
+              <span>{qty}</span>
+              <button className="black-button" onClick={() => qty > 1 && setQty(qty - 1)}>-</button>
+            </div>
+            <div>
+              <button className="white-button" onClick={addProductToCart}>add to cart</button>
+            </div>
+          </>
+        )}
+        {stock === 0 && <p className="text-3xl font-bold">out of stock</p>}
         <p className="my-2">--------------------------</p>
       </div>
       {loading && <Loading />}
