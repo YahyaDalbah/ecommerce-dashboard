@@ -7,6 +7,7 @@ import Loading from "../../pageSections/Loading.jsx";
 export default function Cart() {
   const [cartProducts, setCartProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [totalSum, setTotalSum] = useState(0);
   async function getCart() {
     setLoading(true);
     try {
@@ -21,6 +22,13 @@ export default function Cart() {
   useEffect(() => {
     getCart();
   }, []);
+  useEffect(() => {
+    let sum = 0
+    cartProducts.forEach(cartProduct => {
+      sum += cartProduct.qty * cartProduct.price
+    })
+    setTotalSum(sum)
+  },[cartProducts])
   console.log(cartProducts);
   return (
     <>
@@ -28,13 +36,18 @@ export default function Cart() {
         <div>
           <h1 className="page-title">Cart</h1>
           {cartProducts.length > 0 ? (
-            cartProducts.map((cartProduct) => (
-              <CartProduct
-                key={cartProduct._id}
-                setCartProducts={setCartProducts}
-                {...cartProduct}
-              />
-            ))
+            <div className="grid grid-cols-2">
+              {cartProducts.map((cartProduct) => {
+                return (
+                  <CartProduct
+                    key={cartProduct._id}
+                    setCartProducts={setCartProducts}
+                    {...cartProduct}
+                  />
+                );
+              })}
+              <p className="text-xl">total sum = {totalSum}</p>
+            </div>
           ) : (
             <p>no products</p>
           )}
