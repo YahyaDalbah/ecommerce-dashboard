@@ -9,7 +9,7 @@ import PageNumber from "./PageNumber.jsx";
 
 export default function Products() {
   const [err, setErr] = useState("");
-  const { user, categories, subCategories, loading } = useUserData();
+  const { user, categories, subCategories, dataLoading } = useUserData();
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
@@ -104,7 +104,7 @@ export default function Products() {
   console.log(products);
   return (
     <>
-      {loading || componentLoading ? (
+      {(dataLoading || componentLoading) ? (
         <div className="loading-wrapper">
           <Loading />
         </div>

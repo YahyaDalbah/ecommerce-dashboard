@@ -1,9 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BASEURL } from "../../index.jsx";
 import Loading from "../../pageSections/Loading.jsx";
 import ErrorMessage from "../../UIcomponents/ErrorMessage.jsx";
-import { Navigate, redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export default function RecoverPassword() {
   const [loading, setLoading] = useState(false);

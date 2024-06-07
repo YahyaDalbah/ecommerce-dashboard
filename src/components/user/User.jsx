@@ -9,11 +9,11 @@ import { useUserData } from "../../provider/UserProvider.jsx";
 
 function Logout() {
   const { setToken, setRefreshToken } = useAuth();
-  const { user, loading } = useUserData();
+  const { user, userLoading } = useUserData();
 
   return (
     <div>
-      {!loading ? (
+      {!userLoading ? (
         <>
           <div>
             <h1 className="page-title">User</h1>
@@ -36,7 +36,7 @@ function Logout() {
           </button>
         </>
       ) : (
-        <div className="loading-wrapper">
+        <div className="userLoading-wrapper">
           <Loading />
         </div>
       )}
@@ -45,7 +45,7 @@ function Logout() {
 }
 function UserForm({ children, method }) {
   const [err, setErr] = useState("");
-  const [loading, setLoading] = useState();
+  const [userLoading, setLoading] = useState();
   const { setToken, setRefreshToken } = useAuth();
 
   async function doMethod(e) {
@@ -85,7 +85,7 @@ function UserForm({ children, method }) {
         <button className="black-button">
           {method === "login" ? "Login" : "Signup"}
         </button>
-        {loading && <Loading />}
+        {userLoading && <Loading />}
       </form>
     </>
   );

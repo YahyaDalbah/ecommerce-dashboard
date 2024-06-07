@@ -8,7 +8,7 @@ import SubCategory from "./SubCategory.jsx";
 
 export default function SubCategories() {
   const [err, setErr] = useState("");
-  const { user, categories, subCategories, setSubCategories, loading } =
+  const { user, categories, subCategories, setSubCategories, dataLoading } =
     useUserData();
   const [componentLoading, setComponentLoading] = useState(false);
 
@@ -48,8 +48,8 @@ export default function SubCategories() {
   console.log(subCategories);
   return (
     <>
-      {loading || componentLoading ? (
-        <div className="loading-wrapper">
+      {dataLoading || componentLoading ? (
+        <div className="dataLoading-wrapper">
           <Loading />
         </div>
       ) : (

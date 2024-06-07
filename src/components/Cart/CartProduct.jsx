@@ -18,8 +18,7 @@ export default function CartProduct({
   async function updateCart(qty) {
     setLoading(true);
     try {
-      const cart = (await axios.put(`${BASEURL}/cart`, { qty, productId }))
-        .data;
+      await axios.put(`${BASEURL}/cart`, { qty, productId });
       setCartProducts((prev) => {
         if (qty === 0) {
           return prev.filter((product) => product.productId !== productId);

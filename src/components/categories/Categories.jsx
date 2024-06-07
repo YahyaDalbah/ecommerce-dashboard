@@ -8,7 +8,7 @@ import Category from "./Category.jsx";
 
 export default function Categories() {
   const [err, setErr] = useState("");
-  const { categories, setCategories, loading } = useUserData();
+  const { categories, setCategories, dataLoading } = useUserData();
   const [componentLoading, setComponentLoading] = useState(false);
   const { user } = useUserData();
   async function addCategory(e) {
@@ -31,7 +31,7 @@ export default function Categories() {
   console.log(categories);
   return (
     <>
-      {loading || componentLoading ? (
+      {dataLoading || componentLoading ? (
         <div className="loading-wrapper">
           <Loading />
         </div>

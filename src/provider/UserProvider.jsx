@@ -14,20 +14,21 @@ export default function UserProvider({ children }) {
   });
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [userLoading, setUserLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const { token } = useAuth();
   async function getUserData() {
-    setLoading(true);
+    setUserLoading(true);
     try {
       const user = await axios.get(`${BASEURL}/user`);
       setUser(user.data);
     } catch (err) {
       console.error(err);
     }
-    setLoading(false);
+    setUserLoading(false);
   }
   async function getData() {
-    setLoading(true);
+    setDataLoading(true);
     try {
       const categoryPromise = axios.get(`${BASEURL}/category`);
       const [categories] = (
@@ -48,7 +49,7 @@ export default function UserProvider({ children }) {
     } catch (err) {
       console.error(err);
     }
-    setLoading(false);
+    setDataLoading(false);
   }
   useEffect(() => {
     if (token) {
@@ -68,7 +69,8 @@ export default function UserProvider({ children }) {
         user,
         categories,
         setCategories,
-        loading,
+        userLoading,
+        dataLoading,
         subCategories,
         setSubCategories,
       }}
