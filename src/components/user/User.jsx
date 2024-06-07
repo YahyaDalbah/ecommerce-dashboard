@@ -16,11 +16,14 @@ function Logout() {
       {!loading ? (
         <>
           <div>
-            <h1 className="page-title">the user page with his data</h1>
+            <h1 className="page-title">User</h1>
             <p>email: {user.email}</p>
             <p>name: {user.userName}</p>
             <p>role: {user.role}</p>
-            <p>is email confirmed: {user.confirmEmail ? "yes" : "no"}</p>
+            <p>
+              is email confirmed:{" "}
+              {user.confirmEmail ? "yes" : "no (an email was sent, check your email and spam)"}
+            </p>
           </div>
           <button
             className="black-button"
@@ -130,11 +133,7 @@ export default function User() {
               id="cPassword"
               placeholder="confirm password"
             />
-            <select
-              className=""
-              name="role"
-              id="role"
-            >
+            <select className="" name="role" id="role">
               <option value="">select your role</option>
               <option value="user">user</option>
               <option value="admin">admin</option>

@@ -5,12 +5,16 @@ import Loading from "../../pageSections/Loading.jsx";
 import ErrorMessage from "../../UIcomponents/ErrorMessage.jsx";
 import { useUserData } from "../../provider/UserProvider.jsx";
 import Product from "./Product.jsx";
+import PageNumber from "./PageNumber.jsx";
 
 export default function Products() {
   const [err, setErr] = useState("");
   const { user, categories, subCategories, loading } = useUserData();
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
   const [componentLoading, setComponentLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const getProducts = useCallback(async () => {
     setComponentLoading(true);
     try {
@@ -34,6 +38,30 @@ export default function Products() {
   useEffect(() => {
     getProducts();
   }, [getProducts]);
+  const filteredProducts = products.filter(
+    (product) => product.name.toLowerCase().includes(searchTerm) // Case-insensitive search
+  );
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  const pageNumbers = [];
+  if (totalPages > 1) {
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <PageNumber
+          key={i} // Add unique key for each page number
+          num={i}
+          isActive={currentPage === i} // Highlight current page
+          onClick={() => handlePageChange(i)} // Pass handlePageChange function
+        />
+      );
+    }
+  }
   async function addProduct(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -70,6 +98,9 @@ export default function Products() {
     }
     setComponentLoading(false);
   }
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value.toLowerCase()); // Lowercase for case-insensitive search
+  };
   console.log(products);
   return (
     <>
@@ -132,12 +163,26 @@ export default function Products() {
               <button className="black-button">Add product</button>
             </form>
           )}
-          <div>
-            {products.map((product) => (
-              <Product key={product._id} products={products} setProducts={setProducts} {...product} />
+          <input
+            type="search"
+            name="search"
+            id="search"
+            placeholder="search"
+            onChange={handleSearch}
+          />
+          <div className="grid grid-cols-2">
+            {paginatedProducts.map((product) => (
+              <Product
+                key={product._id}
+                products={products}
+                setProducts={setProducts}
+                {...product}
+              />
             ))}
             {products.length === 0 && <p>no products</p>}
           </div>
+
+          <footer className="mb-10 flex justify-around">{pageNumbers}</footer>
         </div>
       )}
     </>
