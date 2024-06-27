@@ -1,0 +1,9 @@
+- Designed and implemented RESTful API endpoints for product, category, cart management, and user authentication.
+- Reusable React components and state management for dynamic UI
+- Secure user authentication and authorization using JWT
+- Used Cloudinary to add and store product images
+- Used React-router to implement dynamic routing in the React client side
+- Protected routes can only be accessed if the user is logged in as an admin, and others if user
+- Implemented 2 frontend views
+-    Admin that can add, update, and delete products, categories, and subcategories
+-    User who can add products to the cart and checkout it
